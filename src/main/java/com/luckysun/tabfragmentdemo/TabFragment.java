@@ -2,6 +2,7 @@ package com.luckysun.tabfragmentdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,13 @@ public class TabFragment extends Fragment {
 
     private String mParam1;
     private TextView textView;
+    private TextView mLoadingView;
+
+    private boolean isLoaded;
+
+
+    private Handler mHandler = new Handler() {
+    };
 
     public static TabFragment newInstance(TabInfo info) {
         TabFragment fragment = new TabFragment();
@@ -26,15 +34,15 @@ public class TabFragment extends Fragment {
         return fragment;
     }
 
-    public TabFragment() {}
+    public TabFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            onCreate ++ ;
+            onCreate++;
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam1 += "\n onCreate : " + onCreate;
             Log.d(MainActivity.TAG, mParam1 + " fragment onCreate ");
         }
     }
@@ -44,12 +52,14 @@ public class TabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
         textView = (TextView) rootView.findViewById(R.id.testview);
+        mLoadingView = (TextView) rootView.findViewById(R.id.loading_view);
+
+        showView(false);
+
         onCreateView++;
-        textView.setText(mParam1 + " \n onCreateView: " + onCreateView);
         Log.d(MainActivity.TAG, mParam1 + " fragment onCreateView ");
         return rootView;
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,4 +72,30 @@ public class TabFragment extends Fragment {
     }
 
 
+    private void showView(boolean isShow) {
+        if (isShow) {
+            textView.setVisibility(View.VISIBLE);
+            mLoadingView.setVisibility(View.GONE);
+            isLoaded = true;
+        } else {
+            textView.setVisibility(View.GONE);
+            mLoadingView.setVisibility(View.VISIBLE);
+            isLoaded = false;
+        }
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void loadDatas() {
+        Log.d(MainActivity.TAG, mParam1 + " fragment loadDatas ");
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showView(true);
+                textView.setText(mParam1 +  "\n onCreate : " + onCreate + " \n onCreateView: " + onCreateView);
+            }
+        }, 2 * 1000);
+    }
 }

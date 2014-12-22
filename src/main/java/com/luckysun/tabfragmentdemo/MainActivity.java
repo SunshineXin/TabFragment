@@ -32,11 +32,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         initView();
         getDate();
+
+        updateTabs();
+
     }
 
 
     private void initView() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOffscreenPageLimit(3);
         mTabLayout = (LinearLayout) findViewById(R.id.layout_tab);
         mSliderImageView = (ImageView) findViewById(R.id.iv_tab);
     }
@@ -50,29 +54,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         mPageInfo.page_count = mPageInfo.tabs.size();
 
-
-
-        updateTabs();
     }
 
 
     private void updateTabs() {
-        Log.d(TAG, "updateTabs");
+        Log.d(TAG, "-----------------------------\nupdateTabs");
 
         int homeIndex = mPageInfo.pageIndex;
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         drawTabs(metrics.widthPixels);
-
-        updateTab(homeIndex);
 
         mAdapter = new TabFragmentAdapter(this.getSupportFragmentManager(), mViewPager, this);
         mViewPager.setAdapter(mAdapter);
 
+        updateTab(homeIndex);
         mViewPager.setCurrentItem(homeIndex);
 
+        Log.d(TAG, "-----------------------------");
+        //FIXME 初始化首页的数据
+        ((TabFragment)mAdapter.getItem(homeIndex)).loadDatas();
     }
 
     public void updateTab(int id) {
@@ -80,7 +82,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
         int margin = id * (width / mPageInfo.tabs.size());
-        android.widget.RelativeLayout.LayoutParams param = (android.widget.RelativeLayout.LayoutParams) mSliderImageView .getLayoutParams();
+        android.widget.RelativeLayout.LayoutParams param = (android.widget.RelativeLayout.LayoutParams) mSliderImageView.getLayoutParams();
         param.leftMargin = margin;
         mSliderImageView.setLayoutParams(param);
     }
@@ -98,7 +100,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 / mPageInfo.tabs.size();
         for (int i = 0; i < mPageInfo.tabs.size(); i++) {
 
-            TextView textView = (TextView) getLayoutInflater().inflate( R.layout.tab_title_textview, null);
+            TextView textView = (TextView) getLayoutInflater().inflate(R.layout.tab_title_textview, null);
             textView.setId(i);
             textView.setText(mPageInfo.tabs.get(i).name);
             textView.setOnClickListener(this);
@@ -133,7 +135,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         float scale = metrics.density;
         return (int) (dipValue * scale + 0.5f);
     }
-
 
 
 }
