@@ -11,12 +11,11 @@ buildscript {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.1.1'
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         applicationId "com.luckysun.tabfragmentdemo"
         minSdkVersion 8
-        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

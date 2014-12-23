@@ -12,7 +12,7 @@ public class TabFragmentAdapter extends FragmentPagerAdapter implements ViewPage
 
     private MainActivity mActivity;
     private ViewPager mViewPager;
-    private List<Fragment> mFragments = new ArrayList<>();
+    private List<Fragment> mFragments = new ArrayList<Fragment>();
 
     public TabFragmentAdapter(FragmentManager fm, ViewPager viewPager, MainActivity activity) {
         super(fm);
